@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements
                         // 연결 끊기
                         conn.disconnect();
                         Thread.sleep(10000);
+                        isWork = false;
                     }
                 } catch (Exception e) {
                     Log.i("tag", "error :" + e);
@@ -276,9 +277,9 @@ public class MainActivity extends AppCompatActivity implements
                             br.close();
                         }
                         JSONObject object = new JSONObject(sb.toString());
-                        Log.d("water command", object.get("is_water").toString());
                         if (Integer.parseInt(object.get("is_water").toString()) == 0) {
                             isWatering = false;
+                            robot.speak(TtsRequest.create(command.getKorCommand()));
                             finishCommand(command);
                         } else {
                             waitForWater(command);
@@ -408,7 +409,6 @@ public class MainActivity extends AppCompatActivity implements
             }
             Thread finishThread = finishCommand(doingCommand);
             synchronized (finishThread) {
-                isWork = false;
                 parseCommand();
             }
         }
